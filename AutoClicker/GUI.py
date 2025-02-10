@@ -16,12 +16,14 @@ def setFunctions(func1, func2):
 
 def apply():
     global cps
+    cps = 10 # Default
     try:
         temp = int(cpsEntry.get())
         if(temp > 0 and temp < 51):
             cps = cpsEntry.get()
         else:
-            print("Invalid entry")
+            #print("Invalid entry")
+            pass
     except:
         #print("Invalid entry")
         pass

@@ -11,7 +11,7 @@ mouse = Controller()
 
 #Default values
 cps = 10
-interval = (1 / cps) + 0.004
+interval = (1 / cps)
 
 clickType = 0
 mouseButton = Button.left
@@ -22,7 +22,7 @@ def updateValues(cps, clicktype, mousebutton):
     global clickType
     global mouseButton
     
-    interval = (1/int(cps)) + 0.004
+    interval = (1/int(cps))
 
     if clicktype == "Single":
         clickType = 0
@@ -40,11 +40,6 @@ def updateValues(cps, clicktype, mousebutton):
     
     
     
-
-
-def updateCPS(new):
-    interval = (1/new) + 0.004
-
 
 def clickLoop():
     global interval
@@ -95,10 +90,10 @@ keyboard.add_hotkey('shift+b', toggle_autoclicker)
 t1 = threading.Thread(target=clickLoop, name='t1', daemon=True)
 t2 = threading.Thread(target=GUI.setup, name='t2', daemon=True)
 
-t1.start()
 t2.start()
+t1.start()
 
-t1.join()
+#t1.join()
 t2.join()
 
     
