@@ -83,6 +83,7 @@ def GUI():
     global timedropdown
     global enableButton
     global disableButton
+    global root
 
     colour1 = "#EEEEEE"
     colour2 = "#DDDDDD"
@@ -127,6 +128,5 @@ t2 = threading.Thread(target=GUI, name='t2', daemon=True)
 t1.start()
 t2.start()
 
-t1.join()
 t2.join()
     
