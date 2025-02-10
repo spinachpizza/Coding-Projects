@@ -1,2 +1,0 @@
-python GUI.py
-pause
