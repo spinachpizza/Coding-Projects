@@ -69,6 +69,8 @@ def setup():
     global startbutton
     global stopbutton
 
+    colour1 = "#EEEEEE"
+    colour2 = "#DDDDDD"
 
     
     root = tk.Tk()
