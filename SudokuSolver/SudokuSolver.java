@@ -37,7 +37,7 @@ public class SudokuSolver {
     }
 
     public static void StartSolver(String input) {
-
+        System.out.println(input);
         startArray = new String[9][9];
 
         BuildInitialArray(input);
@@ -52,6 +52,7 @@ public class SudokuSolver {
 
     public static String[][] SolveSudoku(String[][] array) {
 
+        changes = true;
         while(changes == true) {
             changes = false;
             String[][] noteArray = makeNotes(array);

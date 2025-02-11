@@ -46,8 +46,9 @@ public class GUI extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String gridValues = collectGridValues();
+                clearcells();
                 SudokuSolver.StartSolver(gridValues);
-                submitButton.setEnabled(false);
+                //submitButton.setEnabled(false);
             }
         });
 
@@ -56,6 +57,14 @@ public class GUI extends JFrame {
         add(submitButton, BorderLayout.SOUTH);
 
         setVisible(true);
+    }
+
+    private void clearcells() {
+        for(int i=0; i<GRID_SIZE; i++) {
+            for(int j=0; j<GRID_SIZE; j++) {
+                cells[i][j].setText("");
+            }
+        }
     }
 
     // Method to collect values from the grid
