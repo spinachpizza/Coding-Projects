@@ -72,7 +72,7 @@ def update():
     posChoice = GUI.getposchoice()
     cords = GUI.getcords()
     
-    print("Interval: ", interval, ", Click Type: ", clicktype,", Mouse Button: ", mousebutton, ", Pos Choice: " , posChoice, ", Coords: ", cords)
+    #print("Interval: ", interval, ", Click Type: ", clicktype,", Mouse Button: ", mousebutton, ", Pos Choice: " , posChoice, ", Coords: ", cords)
     
 
 def enable():
