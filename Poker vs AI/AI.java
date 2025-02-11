@@ -226,10 +226,10 @@ public class AI extends Player{
         //Else try to raise
         } else {
 
-            random = ThreadLocalRandom.current().nextInt(0,(FoldChance+20)*2);
+            random = ThreadLocalRandom.current().nextInt(0,(int)Math.ceil((FoldChance+20)*2/bluffValue));
             if(random <= FoldChance)
             {
-                int raiseAmount = ThreadLocalRandom.current().nextInt(5,(cardValue*3)+3);
+                int raiseAmount = ThreadLocalRandom.current().nextInt(Main.CurrentBet+1,Main.CurrentBet+cardValue);
                 Raise(raiseAmount);
                 DisplayMessage("Raise " + raiseAmount);
             } else {
@@ -334,7 +334,7 @@ public class AI extends Player{
                 //If balance is low raise less
                 if(balance < 50)
                 {
-                    raiseAmount = ThreadLocalRandom.current().nextInt(3,balance/2);
+                    raiseAmount = ThreadLocalRandom.current().nextInt(Main.CurrentBet+1,Main.CurrentBet+5);
                 } 
 
                 Raise(raiseAmount);
