@@ -7,46 +7,46 @@ updateValuesFunc = None
 toggleFunc = None
 
 
-def setFunctions(func1, func2):
-    global updateValuesFunc
+def setFunctions(func1):
     global toggleFunc
-    updateValuesFunc = func1
-    toggleFunc = func2
+    toggleFunc = func1
 
 
-def apply():
+def getinterval():
     global cps
-    cps = 10 # Default
     try:
         temp = int(cpsEntry.get())
         if(temp > 0 and temp < 51):
             cps = cpsEntry.get()
         else:
-            #print("Invalid entry")
-            pass
+            cps = 10
     except:
-        #print("Invalid entry")
-        pass
-        
-    mouseButton = mousedropdown.get()
-    clickType = clickdropdown.get()
+        cps = 10
 
-    if updateValuesFunc:
-        updateValuesFunc(cps,clickType, mouseButton)
+    return (1/int(cps))
+    
 
-
-def start():
-    startbutton.config(state=tk.DISABLED)
-    stopbutton.config(state=tk.NORMAL)
-    if toggleFunc:
-        toggleFunc()
-    else:
-        print("System Error")
+def getmousebutton():
+    global mousedropdown
+    return mousedropdown.get()
+    
+def getclicktype():
+    global clickdropdown
+    return clickdropdown.get()
 
 
-def stop():
-    stopbutton.config(state=tk.DISABLED)
-    startbutton.config(state=tk.NORMAL)
+def getposchoice():
+    global poschoice
+    return poschoice.get()
+
+
+def getcords():
+    global xEntry
+    global yEntry
+    return [xEntry.get(), yEntry.get()]
+
+
+def toggle():
     if toggleFunc:
         toggleFunc()
     else:
@@ -62,7 +62,6 @@ def changebuttons2():
     startbutton.config(state=tk.NORMAL)
 
 
-
 def setup():
     
     global cpsEntry
@@ -70,6 +69,9 @@ def setup():
     global clickdropdown
     global startbutton
     global stopbutton
+    global poschoice
+    global xEntry
+    global yEntry
 
     colour1 = "#EEEEEE"
     colour2 = "#DDDDDD"
@@ -77,61 +79,97 @@ def setup():
     
     root = tk.Tk()
     root.title("AutoClicker")
-    root.geometry("500x325")
+    root.geometry("450x325")
     root.resizable(False, False)
     root.configure(bg=colour1)
 
 
     # Create a frame with a border
     frame1 = tk.Frame(root, bd=2, relief="solid")
-    frame1.place(x=10, y=20, width=235, height=100)
+    frame1.place(x=10, y=20, width=210, height=100)
 
     frame2 = tk.Frame(root, bd=2, relief="solid")
-    frame2.place(x=255, y=20, width=235, height=100)
+    frame2.place(x=230, y=20, width=210, height=100)
 
-    # Create the title label overlapping the border
-    subtitle1 = tk.Label(root, text="CPS", bg=colour1, font=("Helvetica", 11))
-    subtitle1.place(x=30, y=10)  # Adjust to fit over the border break
+    frame3 = tk.Frame(root, bd=2, relief="solid")
+    frame3.place(x=10, y=140, width=290, height=100)
 
-    subtitle2 = tk.Label(root, text="Options", bg=colour1, font=("Helvetica", 11))
-    subtitle2.place(x=275, y=10)  # Adjust to fit over the border break
+    frame4 = tk.Frame(root, bd=2, relief="solid")
+    frame4.place(x=310, y=140, width=130, height=100)
+
+    #Subtitles
+    tk.Label(root, text="Options", bg=colour1, font=("Helvetica", 11)).place(x=30,y=10)
+    tk.Label(root, text="Position", bg=colour1, font=("Helvetica", 11)).place(x=250,y=10)
+    tk.Label(root, text="CPS", bg=colour1, font=("Helvetica", 11)).place(x=30,y=130)
+
+    image = tk.PhotoImage(file="hamter.png")
+    img = tk.Label(frame4, image=image)
+    img.image = image
+    img.place(x=0,y=0)
 
 
-    tk.Label(frame1, text="Clicks Per Second (CPS):", bg=colour1, font=("Helvetica", 10)).place(x=5,y=20)
-    cpsEntry = tk.Entry(frame1, width=5)
-    cpsEntry.place(x=180,y=20)
+
+    #CPS Options
+    def only_numbers(char, entry_value, maxLength):
+        return char.isdigit() and len(entry_value) <= maxLength
+
+    tk.Label(frame3, text="Clicks Per Second (CPS):", bg=colour1, font=("Helvetica", 10)).place(x=10,y=20)
+    validate1 = root.register(lambda char, entry_value: only_numbers(char, entry_value, 2)), "%S", "%P"
+    cpsEntry = tk.Entry(frame3, width=4, validate="key", validatecommand=validate1, borderwidth=1, highlightthickness=1, relief="solid", font=("Helvetica", 10))
+    cpsEntry.insert(0,"10")
+    cpsEntry.place(x=175,y=20)
 
 
-    tk.Label(frame2, text="Mouse Button:", bg=colour1, font=("Helvetica", 10)).place(x=5,y=20)
-    tk.Label(frame2, text="Click Type:", bg=colour1, font=("Helvetica", 10)).place(x=5,y=50)
+    #General Options
+    tk.Label(frame1, text="Mouse Button:", bg=colour1, font=("Helvetica", 10)).place(x=10,y=20)
+    tk.Label(frame1, text="Click Type:", bg=colour1, font=("Helvetica", 10)).place(x=10,y=50)
 
     mouseoption = tk.StringVar()
     mouseoption.set("Left Click")
     mouseoptions = ["Left Click","Right Click","Middle Mouse"]
-    mousedropdown = ttk.Combobox(frame2, textvariable=mouseoption, values=mouseoptions, state="readonly", width=12)
-    mousedropdown.place(x=120,y=20)
+    mousedropdown = ttk.Combobox(frame1, textvariable=mouseoption, values=mouseoptions, state="readonly", width=12)
+    mousedropdown.place(x=105,y=20)
 
     clickoption = tk.StringVar()
     clickoption.set("Single")
     clickoptions = ["Single","Hold"]
-    clickdropdown = ttk.Combobox(frame2, textvariable=clickoption, values=clickoptions, state="readonly", width=12)
-    clickdropdown.place(x=120,y=50)
+    clickdropdown = ttk.Combobox(frame1, textvariable=clickoption, values=clickoptions, state="readonly", width=12)
+    clickdropdown.place(x=105,y=50)
 
 
+    #Mouse Position Options
+    poschoice = tk.IntVar()
+    poschoice.set(1)
 
+    validate2 = root.register(lambda char, entry_value: only_numbers(char, entry_value, 4)), "%S", "%P"
+
+    currposbox = tk.Radiobutton(frame2, variable=poschoice, value=1)
+    currposbox.place(x=10,y=20)
+    tk.Label(frame2, text="Current Position", bg=colour1, font=("Helvetica", 10)).place(x=35,y=20)
+
+    cordposbox = tk.Radiobutton(frame2, variable=poschoice, value=2)
+    cordposbox.place(x=10,y=50)
+
+    tk.Label(frame2, text="X:", bg=colour1, font=("Helvetica", 10)).place(x=35,y=50)
+    xEntry= tk.Entry(frame2, width=4, validate="key", validatecommand=validate2, borderwidth=1, highlightthickness=1, relief="solid", font=("Helvetica", 10))
+    xEntry.insert(0,"0")
+    xEntry.place(x=55,y=50)
+
+    tk.Label(frame2, text="Y:", bg=colour1, font=("Helvetica", 10)).place(x=95,y=50)
+    yEntry= tk.Entry(frame2, width=4, validate="key", validatecommand=validate2, borderwidth=1, highlightthickness=1, relief="solid", font=("Helvetica", 10))
+    yEntry.insert(0,"0")
+    yEntry.place(x=115,y=50)
     
 
-    startbutton = tk.Button(root, text="Start (shift+b)", bg=colour2, font=("Helvetica", 12), width=23, height=3, command=start)
-    startbutton.place(x=20, y=150)
 
-    stopbutton = tk.Button(root, text="Stop (shift+b)", bg=colour2, font=("Helvetica", 12), width=23, height=3, comman=stop, state=(tk.DISABLED))
-    stopbutton.place(x=265, y=150)
+    #Buttons
+    startbutton = tk.Button(root, text="Start (shift+b)", bg=colour2, font=("Helvetica", 11), relief="solid",
+                            width=22, height=2, command=toggle, borderwidth=1, highlightthickness=2)
+    startbutton.place(x=10, y=260)
 
-    hotkeybutton = tk.Button(root, text="Change Hotkey", bg=colour2, font=("Helvetica", 12), width=23, height=3, state=(tk.DISABLED))
-    hotkeybutton.place(x=20, y=225)
-
-    applybutton = tk.Button(root, text="Apply Settings", bg=colour2, font=("Helvetica", 12), width=23, height=3, command=apply)
-    applybutton.place(x=265, y=225)
+    stopbutton = tk.Button(root, text="Stop (shift+b)", bg=colour2, font=("Helvetica", 11), relief="solid",
+                            width=22, height=2, command=toggle, borderwidth=1, highlightthickness=2, state=(tk.DISABLED))
+    stopbutton.place(x=230, y=260)
 
     
 
