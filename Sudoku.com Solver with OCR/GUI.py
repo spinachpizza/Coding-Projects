@@ -22,9 +22,9 @@ def finished():
     progresslabel.config(text="Finished")
 
 
-def createerrormessage():
+def createerrormessage(message):
     global errormsg
-    errormsg.config(text="Error: Try moving the mouse slightly.")
+    errormsg.config(text="Error: " + message)
 
 def clearerrormessage():
     global errormsg
@@ -46,7 +46,7 @@ def GUI():
     frame = tk.Frame(root, relief="solid")
     frame.place(x=10,y=0, width=280, height=220)
 
-    tk.Label(frame, text="Place Mouse in the top left corner and select \n the box as shown below:",
+    tk.Label(frame, text="Place Mouse in the first sudoku box and select \n it as shown below:",
              font=("Helvetica", 9)).place(x=20,y=10)
     
 

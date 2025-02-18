@@ -246,6 +246,9 @@ def doPointingPairs(array, noteArray):
                             noteArray[i][column] = noteArray[i][column].replace(num, "")
     return noteArray
 
+
+
+
 def doXWing(array, noteArray):
     for n in range(1, 10):
         num = str(n)
@@ -295,6 +298,9 @@ def doXWing(array, noteArray):
                         if num in noteArray[i][col] and i != rows[0] and i != rows[1]:
                             noteArray[i][col] = noteArray[i][col].replace(num, "")
     return noteArray
+
+
+
 
 def BuildInitialArray(initial):
     startArray = [["0" for _ in range(9)] for _ in range(9)]
