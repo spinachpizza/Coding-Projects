@@ -2,14 +2,25 @@ import cv2
 import numpy as np
 import pytesseract
 import os
-from pynput.mouse import Controller
+from pynput.mouse import Controller, Button
 from PIL import ImageGrab
 import keyboard
+import threading
 import time
 import solver
 import GUI
 
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+
+mouse = Controller()
+
+stop_event = False
+
+
+def threaded(fn):
+    def wrapper(*args, **kwargs):
+        threading.Thread(target=fn, args=args, kwargs=kwargs, daemon=True).start()
+    return wrapper
 
     
 def extractData():
@@ -56,7 +67,6 @@ def extractData():
 def findsudokucorner():
     scale = 1.25
     
-    mouse = Controller()
     mx,my = mouse.position
 
     size = 50
@@ -103,7 +113,6 @@ def getscreenshot(x,y):
     screenshot = ImageGrab.grab(bbox=region)
     screenshot.save('screenshot.png')
     
-    time.sleep(1)
     GUI.updateprogress(5)
 
 
@@ -120,7 +129,21 @@ def enterInput(solved):
             for j in range(0,8):
                 keyboard.send('left')
 
+
+def auto(x,y):
+    mouse.position = (x,y)
+    time.sleep(0.01)
+    mouse.position = (x+280,y-20)
+    time.sleep(0.01)
+    mouse.click(Button.left)
+    time.sleep(4)
+    mouse.position = (x,y)
+    main()
+
+@threaded
 def main():
+    global stop_event
+    
     GUI.starting()
     x,y = findsudokucorner()
     if x is not None:
@@ -128,14 +151,28 @@ def main():
         data = extractData()
         solved = solver.StartSolver(data)
         GUI.finished()
-        if '0' in solved:
-            GUI.createerrormessage("The solver could'nt do this one :(")
+        if not stop_event:
+            if '0' in solved:
+                GUI.createerrormessage("The solver could'nt do this one :(")
+            else:
+                enterInput(solved)
+                if(GUI.getautochoice()):
+                    auto(x,y)
+            stop_event = False
         else:
-            enterInput(solved)
+            GUI.createerrormessage("The solver was terminated")
 
+@threaded
+def end():
+    global stop_event
+    stop_event = True
 
+def startGUI():
+    GUI.GUI()
     
 keyboard.add_hotkey('shift+n', main)
-GUI.GUI()
+keyboard.add_hotkey('shift+m', end)
+guithread = threading.Thread(target=startGUI, daemon=True)
+guithread.start()
 keyboard.wait()
 

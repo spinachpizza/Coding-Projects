@@ -21,6 +21,9 @@ def finished():
     updateprogress(100)
     progresslabel.config(text="Finished")
 
+def getautochoice():
+    global autoVar
+    return autoVar.get()
 
 def createerrormessage(message):
     global errormsg
@@ -36,6 +39,7 @@ def GUI():
     global progressbar
     global progresslabel
     global errormsg
+    global autoVar
     
     root = tk.Tk()
     root.title("SudokuSolver")
@@ -46,7 +50,7 @@ def GUI():
     frame = tk.Frame(root, relief="solid")
     frame.place(x=10,y=0, width=280, height=220)
 
-    tk.Label(frame, text="Place Mouse in the first sudoku box and select \n it as shown below:",
+    tk.Label(frame, text="Place Mouse in the top-left sudoku box and press \n shift+n then keep it selected",
              font=("Helvetica", 9)).place(x=20,y=10)
     
 
@@ -55,8 +59,10 @@ def GUI():
     img.image = image
     img.place(x=80,y=50)
 
-    tk.Label(frame, text="Once in position press shift+n to start and \n keep the box selected",
-             font=("Helvetica", 9)).place(x=20,y=180)
+    autoVar = tk.BooleanVar(value=False)
+    checkbox = tk.Checkbutton(root, text="Auto", font=("Helvetica", 10), variable=autoVar)
+    checkbox.place(x=130, y=180)
+
 
     progresslabel = tk.Label(root, text="", font=("Helvetica", 8))
     progresslabel.place(x=50,y=230)
